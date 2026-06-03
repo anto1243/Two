@@ -2,130 +2,98 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import {
-  LayoutDashboard, Calendar, Brain, Gamepad2, MessageSquare,
-  Heart, BarChart3, Video, CreditCard, Settings, Shield
-} from 'lucide-react'
-import { Avatar } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { LayoutDashboard, Calendar, Brain, Gamepad2, MessageSquare, Heart, BarChart3, Video, CreditCard, Settings, Shield } from 'lucide-react'
 
-const NAV_NAVIGATION = [
-  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+const SECTIONS = [
+  {
+    label: 'Général',
+    items: [{ label: 'Dashboard', href: '/', icon: LayoutDashboard }],
+  },
+  {
+    label: 'Modules',
+    items: [
+      { label: 'Hub', href: '/hub', icon: Calendar },
+      { label: 'Coach IA', href: '/coach', icon: Brain },
+      { label: 'Gamification', href: '/gamification', icon: Gamepad2 },
+      { label: 'Social', href: '/social', icon: MessageSquare, badge: 4 },
+      { label: 'Santé', href: '/health', icon: Heart },
+      { label: 'Analytics', href: '/analytics', icon: BarChart3 },
+      { label: 'Vidéo', href: '/video', icon: Video },
+    ],
+  },
+  {
+    label: 'Gestion',
+    items: [
+      { label: 'Facturation', href: '/billing', icon: CreditCard },
+      { label: 'Paramètres', href: '/settings', icon: Settings },
+    ],
+  },
 ]
 
-const NAV_MODULES = [
-  { label: 'Hub', href: '/hub', icon: Calendar },
-  { label: 'Coach IA', href: '/coach', icon: Brain },
-  { label: 'Gamification', href: '/gamification', icon: Gamepad2 },
-  { label: 'Social', href: '/social', icon: MessageSquare, badge: 4 },
-  { label: 'Santé', href: '/health', icon: Heart },
-  { label: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { label: 'Vidéo', href: '/video', icon: Video },
-]
-
-const NAV_GESTION = [
-  { label: 'Facturation', href: '/billing', icon: CreditCard },
-  { label: 'Paramètres', href: '/settings', icon: Settings },
-]
-
-function NavItem({ label, href, icon: Icon, badge }: {
-  label: string
-  href: string
-  icon: React.ElementType
-  badge?: number
-}) {
+function NavItem({ label, href, icon: Icon, badge }: { label: string; href: string; icon: React.ElementType; badge?: number }) {
   const pathname = usePathname()
   const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
-
   return (
-    <Link
-      href={href}
-      className={cn(
-        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
-        active
-          ? 'bg-gradient-to-r from-sky-500/20 to-transparent border-l-2 border-sky-400 text-sky-300 font-semibold'
-          : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-      )}
-    >
-      <Icon className={cn('w-5 h-5 shrink-0', active ? 'text-sky-400' : 'text-slate-500')} />
-      <span className="flex-1">{label}</span>
+    <Link href={href} className={cn(
+      'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-100 group',
+      active ? 'bg-white/[0.06] text-white/90' : 'text-white/40 hover:text-white/70 hover:bg-white/[0.03]'
+    )}>
+      <Icon className={cn('w-4 h-4 shrink-0', active ? 'text-white/80' : 'text-white/30 group-hover:text-white/50')} />
+      <span className={cn('flex-1 font-medium', active ? 'font-semibold' : '')}>{label}</span>
       {badge && (
-        <span className="w-5 h-5 rounded-full bg-sky-500 text-white text-[10px] font-bold flex items-center justify-center">
-          {badge}
-        </span>
+        <span className="w-4 h-4 rounded-full bg-blue-500 text-white text-[9px] font-bold flex items-center justify-center">{badge}</span>
       )}
+      {active && <div className="w-1 h-1 rounded-full bg-blue-400 shrink-0" />}
     </Link>
   )
 }
 
 export function Sidebar() {
   return (
-    <aside className="flex flex-col h-screen sticky top-0 border-r border-[#1E2D4A] bg-[#060B18] shrink-0 w-72">
+    <aside className="flex flex-col h-screen sticky top-0 w-60 shrink-0 bg-[#09090b] border-r border-white/[0.05]">
+
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-[#1E2D4A]">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shrink-0">
-          <Shield className="w-4 h-4 text-white" />
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/[0.05]">
+        <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center shrink-0">
+          <Shield className="w-3.5 h-3.5 text-white" />
         </div>
         <div>
-          <span className="text-lg font-bold gradient-text">KLoub</span>
-          <span className="block text-[10px] text-slate-500 -mt-0.5">Sports Intelligence</span>
+          <span className="text-sm font-bold text-white tracking-tight">KLoub</span>
+          <span className="block text-[10px] text-white/30 leading-none mt-0.5">Sports Intelligence</span>
         </div>
       </div>
 
-      {/* Team info card */}
-      <div className="mx-3 mt-3 p-3 rounded-lg bg-[#0D1526] border border-[#1E2D4A]">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-xs font-bold text-white shrink-0">
-            FF
-          </div>
+      {/* Team */}
+      <div className="px-3 pt-4 pb-2">
+        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+          <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">FF</div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-slate-200 truncate">Équipe de France</p>
-            <p className="text-[10px] text-slate-500">FIFA #2 · Saison 2024/25</p>
+            <p className="text-xs font-semibold text-white/80 truncate leading-tight">Équipe de France</p>
+            <p className="text-[10px] text-white/30 leading-tight mt-0.5">FIFA #2 · Saison 2024/25</p>
           </div>
-          <Badge variant="success" size="sm">Elite</Badge>
+          <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-md border border-emerald-500/15">Elite</span>
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-2 py-4 overflow-y-auto space-y-4">
-        {/* NAVIGATION section */}
-        <div>
-          <p className="px-3 mb-1 text-[10px] font-semibold tracking-widest text-slate-600 uppercase">Navigation</p>
-          <div className="space-y-0.5">
-            {NAV_NAVIGATION.map((item) => (
-              <NavItem key={item.href} {...item} />
-            ))}
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-2 overflow-y-auto">
+        {SECTIONS.map(section => (
+          <div key={section.label} className="mb-5">
+            <p className="px-3 mb-1.5 text-[10px] font-semibold tracking-[0.08em] text-white/20 uppercase">{section.label}</p>
+            <div className="space-y-0.5">
+              {section.items.map(item => <NavItem key={item.href} {...item} />)}
+            </div>
           </div>
-        </div>
-
-        {/* MODULES section */}
-        <div>
-          <p className="px-3 mb-1 text-[10px] font-semibold tracking-widest text-slate-600 uppercase">Modules</p>
-          <div className="space-y-0.5">
-            {NAV_MODULES.map((item) => (
-              <NavItem key={item.href} {...item} />
-            ))}
-          </div>
-        </div>
-
-        {/* GESTION section */}
-        <div>
-          <p className="px-3 mb-1 text-[10px] font-semibold tracking-widest text-slate-600 uppercase">Gestion</p>
-          <div className="space-y-0.5">
-            {NAV_GESTION.map((item) => (
-              <NavItem key={item.href} {...item} />
-            ))}
-          </div>
-        </div>
+        ))}
       </nav>
 
-      {/* User profile */}
-      <div className="px-2 pb-3 pt-2 border-t border-[#1E2D4A]">
-        <div className="flex items-center gap-3 px-3 py-3 rounded-xl border border-[#1E2D4A] bg-[#0D1526]">
-          <Avatar name="Didier Deschamps" size="sm" />
+      {/* User */}
+      <div className="px-3 pb-4 pt-2 border-t border-white/[0.05]">
+        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/[0.03] transition-colors cursor-pointer">
+          <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">DD</div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-slate-200 truncate">Didier Deschamps</p>
-            <p className="text-[10px] text-slate-500">Sélectionneur National</p>
+            <p className="text-xs font-semibold text-white/80 truncate leading-tight">Didier Deschamps</p>
+            <p className="text-[10px] text-white/30 leading-tight mt-0.5">Sélectionneur National</p>
           </div>
         </div>
       </div>
