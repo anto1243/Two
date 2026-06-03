@@ -197,7 +197,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-5">
                   {[
                     { label: 'Formation par défaut', value: '4-3-3' },
-                    { label: 'Langue d'interface', value: language },
+                    { label: "Langue d'interface", value: language },
                     { label: 'Fuseau horaire', value: timezone },
                     { label: 'Devise', value: 'EUR (€)' },
                   ].map(({ label, value }) => (

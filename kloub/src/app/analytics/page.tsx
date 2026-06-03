@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
                         contentStyle={{ background: '#111114', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, fontSize: 11 }}
                         labelStyle={{ color: 'rgba(255,255,255,0.4)' }}
                         itemStyle={{ color: 'rgba(255,255,255,0.8)' }}
-                        formatter={(v: number) => [`${v} buts`, '']}
+                        formatter={(v) => [`${v} buts`, '']}
                       />
                       <Bar dataKey="goals" fill="#3b82f6" fillOpacity={0.7} radius={[3, 3, 0, 0]} />
                     </BarChart>
