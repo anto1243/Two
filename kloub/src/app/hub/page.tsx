@@ -2,8 +2,8 @@
 import { Topbar } from '@/components/layout/Topbar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { Calendar, Clock, MapPin, Users, Plus, Shield } from 'lucide-react'
 import { useState } from 'react'
 
@@ -24,7 +24,7 @@ const EFFECTIF = [
   { nom: 'Theo Hernandez', club: 'AC Milan', pos: 'LB', num: 22, age: 27, statut: 'available' },
   { nom: 'Jonathan Clauss', club: 'OM', pos: 'RB', num: 19, age: 32, statut: 'available' },
   { nom: 'Lucas Digne', club: 'Aston Villa', pos: 'LB', num: 3, age: 31, statut: 'available' },
-  { nom: 'N\'Golo Kanté', club: 'Al-Ittihad', pos: 'MDC', num: 13, age: 34, statut: 'available' },
+  { nom: "N'Golo Kanté", club: 'Al-Ittihad', pos: 'MDC', num: 13, age: 34, statut: 'available' },
   { nom: 'Aurélien Tchouaméni', club: 'Real Madrid', pos: 'MDC', num: 8, age: 24, statut: 'doubtful' },
   { nom: 'Eduardo Camavinga', club: 'Real Madrid', pos: 'MIL', num: 14, age: 22, statut: 'available' },
   { nom: 'Adrien Rabiot', club: 'OM', pos: 'MIL', num: 4, age: 30, statut: 'available' },
@@ -44,7 +44,7 @@ const STAFF = [
   { nom: 'Guy Stéphan', role: 'Adjoint du Sélectionneur', depuis: '2012', matchs: 167, victoires: 109 },
   { nom: 'Franck Raviot', role: 'Entraîneur des Gardiens', depuis: '2016', matchs: 120, victoires: 78 },
   { nom: 'Patrick Sandrin', role: 'Préparateur Physique', depuis: '2012', matchs: 167, victoires: 109 },
-  { nom: 'Franck Le Gall', role: 'Médecin de l\'équipe', depuis: '2004', matchs: 267, victoires: 160 },
+  { nom: 'Franck Le Gall', role: "Médecin de l'équipe", depuis: '2004', matchs: 267, victoires: 160 },
   { nom: 'Grégory Dupont', role: 'Responsable Performance', depuis: '2018', matchs: 98, victoires: 65 },
 ]
 
@@ -60,23 +60,28 @@ const PLANNING = [
 
 const posTag = (p: string) => {
   if (p === 'G') return 'text-violet-400 border border-violet-400/20'
-  if (['DC','LB','RB'].includes(p)) return 'text-emerald-400 border border-emerald-400/20'
-  if (['MDC','MIL'].includes(p)) return 'text-blue-400 border border-blue-400/20'
+  if (['DC', 'LB', 'RB'].includes(p)) return 'text-emerald-400 border border-emerald-400/20'
+  if (['MDC', 'MIL'].includes(p)) return 'text-blue-400 border border-blue-400/20'
   return 'text-amber-400 border border-amber-400/20'
 }
-const statutDot = (s: string) => s === 'available' ? 'bg-emerald-400' : s === 'doubtful' ? 'bg-amber-400' : 'bg-red-400'
-const statutLabel = (s: string) => s === 'available' ? 'Disponible' : s === 'doubtful' ? 'Incertain' : 'Blessé'
-const typeAccent = (t: string) => t === 'match' ? 'border-l-blue-400' : t === 'entrainement' ? 'border-l-white/20' : t === 'media' ? 'border-l-white/10' : 'border-l-white/10'
+const statutDot = (s: string) =>
+  s === 'available' ? 'bg-emerald-400' : s === 'doubtful' ? 'bg-amber-400' : 'bg-red-400'
+const statutLabel = (s: string) =>
+  s === 'available' ? 'Disponible' : s === 'doubtful' ? 'Incertain' : 'Blessé'
+const typeBorderAccent = (t: string) =>
+  t === 'match' ? 'border-l-blue-500' : t === 'entrainement' ? 'border-l-white/20' : 'border-l-white/[0.08]'
 
-const byPos = (label: string) => EFFECTIF.filter(j => {
-  if (label === 'Gardiens') return j.pos === 'G'
-  if (label === 'Défenseurs') return ['DC','LB','RB'].includes(j.pos)
-  if (label === 'Milieux') return ['MDC','MIL'].includes(j.pos)
-  return j.pos === 'ATT'
-})
+const byPos = (label: string) =>
+  EFFECTIF.filter(j => {
+    if (label === 'Gardiens') return j.pos === 'G'
+    if (label === 'Défenseurs') return ['DC', 'LB', 'RB'].includes(j.pos)
+    if (label === 'Milieux') return ['MDC', 'MIL'].includes(j.pos)
+    return j.pos === 'ATT'
+  })
 
 export default function HubPage() {
   const [tab, setTab] = useState('planning')
+
   return (
     <div className="flex flex-col min-h-full bg-[#09090b]">
       <Topbar title="Hub Organisationnel" subtitle="Gestion du rassemblement · Ligue des Nations · Phase finale" />
@@ -103,15 +108,22 @@ export default function HubPage() {
         {/* Tabs */}
         <div className="flex gap-1 p-1 bg-[#111114] rounded-xl border border-white/[0.06] w-fit">
           {TABS.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${tab === t.id ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'text-white/40 hover:text-white/70'}`}>
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                tab === t.id
+                  ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                  : 'text-white/40 hover:text-white/70'
+              }`}
+            >
               <t.icon className="w-3.5 h-3.5" />
               {t.label}
             </button>
           ))}
         </div>
 
-        {/* Planning */}
+        {/* Planning tab */}
         {tab === 'planning' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <Card className="lg:col-span-2 bg-[#111114] border border-white/[0.06]">
@@ -126,13 +138,18 @@ export default function HubPage() {
               </CardHeader>
               <CardContent className="space-y-2 pt-0">
                 {PLANNING.map((e, i) => (
-                  <div key={i} className={`flex gap-4 p-3.5 rounded-lg border-l-2 border border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer ${typeAccent(e.type)}`}>
+                  <div
+                    key={i}
+                    className={`flex gap-4 p-3.5 rounded-lg border-l-2 border border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer ${typeBorderAccent(e.type)}`}
+                  >
                     <div className="w-12 shrink-0 pt-0.5">
                       <p className="text-[10px] text-white/30 uppercase tracking-wider">{e.date.split(' ')[0]}</p>
                       <p className="text-lg font-bold text-white/80 leading-tight">{e.date.split(' ')[1]}</p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium leading-tight ${e.type === 'match' ? 'text-white/90' : 'text-white/70'}`}>{e.label}</p>
+                      <p className={`text-sm font-medium leading-tight ${e.type === 'match' ? 'text-white/90' : 'text-white/70'}`}>
+                        {e.label}
+                      </p>
                       <div className="flex items-center gap-3 mt-1.5 text-[11px] text-white/30">
                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{e.heure}</span>
                         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{e.loc}</span>
@@ -167,10 +184,10 @@ export default function HubPage() {
           </div>
         )}
 
-        {/* Effectif */}
+        {/* Effectif tab */}
         {tab === 'effectif' && (
           <div className="space-y-4">
-            {['Gardiens','Défenseurs','Milieux','Attaquants'].map(groupe => (
+            {['Gardiens', 'Défenseurs', 'Milieux', 'Attaquants'].map(groupe => (
               <Card key={groupe} className="bg-[#111114] border border-white/[0.06]">
                 <CardHeader className="py-4">
                   <div className="flex items-center gap-3">
@@ -182,7 +199,7 @@ export default function HubPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-white/[0.06]">
-                        {['#','Joueur','Club','Poste','Âge','Statut'].map(h => (
+                        {['#', 'Joueur', 'Club', 'Poste', 'Âge', 'Statut'].map(h => (
                           <th key={h} className="px-4 py-2.5 text-left text-[10px] font-medium text-white/30 uppercase tracking-wider">{h}</th>
                         ))}
                       </tr>
@@ -218,7 +235,7 @@ export default function HubPage() {
           </div>
         )}
 
-        {/* Staff */}
+        {/* Staff tab */}
         {tab === 'staff' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {STAFF.map(s => (
@@ -239,7 +256,7 @@ export default function HubPage() {
                     </div>
                     <div>
                       <p className="text-[11px] uppercase tracking-widest text-white/30 mb-1">Victoires</p>
-                      <p className="text-2xl font-bold text-white/90">{Math.round(s.victoires / s.matchs * 100)}%</p>
+                      <p className="text-2xl font-bold text-white/90">{Math.round((s.victoires / s.matchs) * 100)}%</p>
                     </div>
                   </div>
                 </CardContent>

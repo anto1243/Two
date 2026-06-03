@@ -2,135 +2,180 @@
 import { Topbar } from '@/components/layout/Topbar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { CreditCard, Check, Zap, Shield, Crown, ArrowRight } from 'lucide-react'
+import { CreditCard, Users, HardDrive, Zap, CheckCircle, ArrowUpRight } from 'lucide-react'
 
-const PLANS = [
-  {
-    name:'Starter',icon:Zap,price:49,desc:'Idéal pour les petits clubs amateurs',color:'slate',
-    features:['Jusqu\'à 30 joueurs','Hub Organisationnel','Planning basique','Support email'],
-    notIncluded:['Coach IA','Analyse Vidéo','Gamification avancée','Analytics premium'],
-    current:false,
-  },
-  {
-    name:'Pro',icon:Shield,price:149,desc:'Pour les clubs semi-professionnels',color:'sky',
-    features:['Jusqu\'à 80 joueurs','Tous les modules','Coach IA','Analyse Vidéo IA','Gamification complète','Suivi Santé avancé','Support prioritaire'],
-    notIncluded:[],
-    current:true,
-  },
-  {
-    name:'Elite',icon:Crown,price:349,desc:'Pour les clubs professionnels',color:'amber',
-    features:['Joueurs illimités','Tout Pro inclus','Multi-équipes','API dédiée','Manager dédié','SLA 99.9%','Onboarding sur site'],
-    notIncluded:[],
-    current:false,
-  },
+const usageStats = [
+  { label: 'Membres actifs', value: 23, max: 25, display: '23 / 25', icon: Users },
+  { label: 'Stockage utilisé', value: 58, max: 100, display: '142 GB / 250 GB', icon: HardDrive },
+  { label: 'Appels API', value: 71, max: 100, display: '14 200 / 20 000', icon: Zap },
 ]
 
-const INVOICES = [
-  {date:'1 Juin 2025',amount:149,status:'paid',desc:'Plan Pro · Juin 2025'},
-  {date:'1 Mai 2025',amount:149,status:'paid',desc:'Plan Pro · Mai 2025'},
-  {date:'1 Avr 2025',amount:149,status:'paid',desc:'Plan Pro · Avril 2025'},
+const invoices = [
+  { month: 'Novembre 2024', amount: '€299.00', status: 'Payé', date: '01 Nov 2024' },
+  { month: 'Octobre 2024', amount: '€299.00', status: 'Payé', date: '01 Oct 2024' },
+  { month: 'Septembre 2024', amount: '€299.00', status: 'Payé', date: '01 Sep 2024' },
+  { month: 'Août 2024', amount: '€299.00', status: 'Payé', date: '01 Août 2024' },
+  { month: 'Juillet 2024', amount: '€299.00', status: 'Payé', date: '01 Juil 2024' },
+  { month: 'Juin 2024', amount: '€299.00', status: 'Payé', date: '01 Juin 2024' },
+]
+
+const enterpriseFeatures = [
+  'Membres illimités',
+  'Stockage 2 TB',
+  'API calls illimitées',
+  'Support dédié 24/7',
+  'Intégrations sur mesure',
+  'SLA garanti 99.99%',
 ]
 
 export default function BillingPage() {
   return (
-    <div className="flex flex-col min-h-full">
-      <Topbar title="Facturation" subtitle="Gestion de votre abonnement KLoub"/>
-      <div className="p-6 space-y-6">
+    <div className="min-h-screen bg-[#09090b]">
+      <Topbar title="Facturation" subtitle="Abonnement, usage et historique" />
 
-        <div className="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Shield className="w-5 h-5 text-sky-400"/>
-            <div>
-              <p className="text-sm font-semibold text-slate-200">Plan Pro actif — FC Olympique Paris</p>
-              <p className="text-xs text-slate-500">Renouvellement le 1 Juillet 2025 · 149€/mois</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm">Gérer</Button>
-            <Button size="sm">Mettre à niveau <ArrowRight className="w-3.5 h-3.5"/></Button>
-          </div>
-        </div>
+      <div className="px-8 py-8 space-y-8 max-w-5xl mx-auto">
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {PLANS.map(plan=>(
-            <Card key={plan.name} className={plan.current?'border-sky-500/50 relative overflow-hidden':''} glow={plan.current}>
-              {plan.current && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-500 to-cyan-400"/>
-              )}
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <plan.icon className={`w-5 h-5 ${plan.color==='sky'?'text-sky-400':plan.color==='amber'?'text-amber-400':'text-slate-400'}`}/>
-                  <span className="text-base font-bold text-slate-200">{plan.name}</span>
-                  {plan.current && <Badge variant="info" size="sm">Actuel</Badge>}
-                </div>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold text-slate-100">{plan.price}€</span>
-                  <span className="text-sm text-slate-500">/mois</span>
-                </div>
-                <p className="text-xs text-slate-500 mb-6">{plan.desc}</p>
-                <div className="space-y-2 mb-6">
-                  {plan.features.map(f=>(
-                    <div key={f} className="flex items-center gap-2 text-xs text-slate-300">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0"/>{f}
-                    </div>
-                  ))}
-                  {plan.notIncluded.map(f=>(
-                    <div key={f} className="flex items-center gap-2 text-xs text-slate-600 line-through">
-                      <Check className="w-3.5 h-3.5 text-slate-700 shrink-0"/>{f}
-                    </div>
-                  ))}
-                </div>
-                <Button variant={plan.current?'secondary':'primary'} className="w-full" disabled={plan.current}>
-                  {plan.current?'Plan actuel':'Choisir ce plan'}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader><CardTitle>Facturation</CardTitle></CardHeader>
-            <CardContent className="p-0">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[#1E2D4A]">
-                    {['Date','Description','Montant','Statut',''].map(h=>(
-                      <th key={h} className="px-4 py-3 text-left text-xs text-slate-500 font-medium">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {INVOICES.map(inv=>(
-                    <tr key={inv.date} className="border-b border-[#1E2D4A]/50">
-                      <td className="px-4 py-3 text-xs text-slate-400">{inv.date}</td>
-                      <td className="px-4 py-3 text-xs text-slate-300">{inv.desc}</td>
-                      <td className="px-4 py-3 text-xs font-semibold text-slate-200">{inv.amount}€</td>
-                      <td className="px-4 py-3"><Badge variant="success" size="sm">Payé</Badge></td>
-                      <td className="px-4 py-3"><Button variant="ghost" size="sm">PDF</Button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader><CardTitle>Moyen de paiement</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-slate-700 to-slate-800 border border-slate-600">
-                <CreditCard className="w-8 h-8 text-slate-400"/>
+        {/* Current plan */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <Card className="lg:col-span-3 bg-[#111114] border-white/[0.06]">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-[11px] uppercase tracking-widest text-white/30 font-normal">
+                Plan actuel
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-slate-200">Visa •••• 4242</p>
-                  <p className="text-xs text-slate-500">Expire 12/2027</p>
+                  <div className="flex items-center gap-3 mb-1">
+                    <h2 className="text-3xl font-bold text-white/90">Elite</h2>
+                    <Badge className="text-[10px] bg-blue-500/10 text-blue-400 border-blue-500/20">Actif</Badge>
+                  </div>
+                  <p className="text-white/40 text-sm mb-4">Renouvellement le 1 décembre 2024</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold text-white/90">€299</span>
+                    <span className="text-white/40 text-sm">/ mois</span>
+                  </div>
                 </div>
-                <Badge variant="success" className="ml-auto">Principale</Badge>
+                <div className="text-right">
+                  <CreditCard className="w-8 h-8 text-white/15 mb-2 ml-auto" />
+                  <p className="text-[11px] text-white/30">Visa •••• 4242</p>
+                  <button className="text-[11px] text-blue-400 hover:text-blue-300 mt-1 transition-colors cursor-pointer">
+                    Changer
+                  </button>
+                </div>
               </div>
-              <Button variant="secondary" className="w-full"><CreditCard className="w-4 h-4"/>Ajouter une carte</Button>
+              <div className="mt-6 flex gap-3">
+                <Button variant="outline" className="text-xs border-white/[0.08] text-white/50 hover:text-white/80 hover:border-white/15">
+                  Gérer l'abonnement
+                </Button>
+                <Button variant="outline" className="text-xs border-white/[0.08] text-white/50 hover:text-white/80 hover:border-white/15">
+                  Télécharger facture
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Usage summary */}
+          <Card className="lg:col-span-2 bg-[#111114] border-white/[0.06]">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-[11px] uppercase tracking-widest text-white/30 font-normal">
+                Usage ce mois
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              {usageStats.map(({ label, value, display, icon: Icon }) => (
+                <div key={label}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Icon className="w-3.5 h-3.5 text-white/25" />
+                      <span className="text-[12px] text-white/50">{label}</span>
+                    </div>
+                    <span className="text-[12px] text-white/60 font-medium">{display}</span>
+                  </div>
+                  <div className="h-[3px] w-full bg-white/[0.06] rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${value > 80 ? 'bg-amber-500' : 'bg-blue-500'}`}
+                      style={{ width: `${value}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
+
+        {/* Invoice history */}
+        <Card className="bg-[#111114] border-white/[0.06]">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-[11px] uppercase tracking-widest text-white/30 font-normal">
+              Historique des factures
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              {invoices.map((inv, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between py-3 border-b border-white/[0.04] last:border-0"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/80 font-medium">{inv.month}</p>
+                      <p className="text-[11px] text-white/30">{inv.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Badge className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                      {inv.status}
+                    </Badge>
+                    <span className="text-sm font-semibold text-white/80 w-20 text-right">{inv.amount}</span>
+                    <button className="text-white/25 hover:text-white/60 transition-colors cursor-pointer">
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Enterprise upgrade */}
+        <Card className="bg-[#111114] border-blue-500/20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/[0.04] rounded-full -translate-y-32 translate-x-32 blur-3xl" />
+          <CardContent className="pt-7 pb-7">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-blue-400/70 mb-3">Passer au niveau supérieur</p>
+                <h3 className="text-2xl font-bold text-white/90 mb-2">Plan Enterprise</h3>
+                <p className="text-sm text-white/40 leading-relaxed mb-6">
+                  Pour les fédérations et clubs professionnels nécessitant une infrastructure sans compromis,
+                  un accès illimité et un accompagnement dédié.
+                </p>
+                <div className="flex items-baseline gap-1.5 mb-6">
+                  <span className="text-3xl font-bold text-white/90">Sur devis</span>
+                </div>
+                <Button className="bg-blue-500/15 text-blue-400 border border-blue-500/25 hover:bg-blue-500/25 text-sm">
+                  Contacter l'équipe commerciale
+                </Button>
+              </div>
+              <div className="space-y-2.5">
+                <p className="text-[11px] uppercase tracking-widest text-white/30 mb-3">Inclus dans Enterprise</p>
+                {enterpriseFeatures.map((feature) => (
+                  <div key={feature} className="flex items-center gap-2.5">
+                    <CheckCircle className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                    <span className="text-sm text-white/60">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   )

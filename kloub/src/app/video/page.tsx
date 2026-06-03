@@ -1,144 +1,197 @@
 'use client'
+import { useState } from 'react'
 import { Topbar } from '@/components/layout/Topbar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Video, Upload, Play, Clock, Zap, Film, ChevronRight, Eye } from 'lucide-react'
-import { useState } from 'react'
+import { Play, Clock, Film, BarChart2 } from 'lucide-react'
 
-const VIDEOS = [
-  {id:1,title:'FC Olympique vs AS Monaco',date:'1 Juin 2025',duration:'94:12',status:'analyzed',views:18,tags:['Ligue 1','Domicile'],thumbnail:'bg-gradient-to-br from-sky-900 to-slate-900'},
-  {id:2,title:'Séance Tactique — 28 Mai',date:'28 Mai 2025',duration:'45:33',status:'analyzed',views:24,tags:['Entraînement'],thumbnail:'bg-gradient-to-br from-violet-900 to-slate-900'},
-  {id:3,title:'FC Olympique vs OGC Nice',date:'24 Mai 2025',duration:'92:05',status:'processing',views:0,tags:['Ligue 1','Extérieur'],thumbnail:'bg-gradient-to-br from-emerald-900 to-slate-900'},
-  {id:4,title:'Corner routines — 20 Mai',date:'20 Mai 2025',duration:'22:10',status:'analyzed',views:31,tags:['Tactique'],thumbnail:'bg-gradient-to-br from-amber-900 to-slate-900'},
+const tabs = ['Tous', 'Analyse', 'Tactique', 'Highlights']
+
+const videos = [
+  {
+    id: 1,
+    title: 'France vs Croatie — Analyse tactique complète',
+    category: 'Analyse',
+    duration: '42:18',
+    date: '12 Nov 2024',
+    color: 'from-blue-900/40 to-blue-950/60',
+    featured: true,
+    views: 248,
+  },
+  {
+    id: 2,
+    title: 'France vs Italie — Pressing haut & transitions',
+    category: 'Tactique',
+    duration: '28:05',
+    date: '15 Oct 2024',
+    color: 'from-violet-900/40 to-violet-950/60',
+    featured: false,
+    views: 192,
+  },
+  {
+    id: 3,
+    title: 'France vs Belgique — Highlights LDN',
+    category: 'Highlights',
+    duration: '08:44',
+    date: '07 Oct 2024',
+    color: 'from-emerald-900/40 to-emerald-950/60',
+    featured: false,
+    views: 415,
+  },
+  {
+    id: 4,
+    title: 'France vs Israël — Analyse des phases arrêtées',
+    category: 'Analyse',
+    duration: '19:22',
+    date: '10 Oct 2024',
+    color: 'from-amber-900/40 to-amber-950/60',
+    featured: false,
+    views: 137,
+  },
+  {
+    id: 5,
+    title: 'France vs Belgique (retour) — 3-2 décryptage',
+    category: 'Analyse',
+    duration: '35:50',
+    date: '14 Nov 2024',
+    color: 'from-rose-900/40 to-rose-950/60',
+    featured: false,
+    views: 311,
+  },
+  {
+    id: 6,
+    title: 'France vs Italie — Top 5 actions',
+    category: 'Highlights',
+    duration: '05:30',
+    date: '17 Nov 2024',
+    color: 'from-cyan-900/40 to-cyan-950/60',
+    featured: false,
+    views: 520,
+  },
 ]
 
-const HIGHLIGHTS = [
-  {time:'12:34',label:'But de K. Mbappé',type:'goal',player:'Kylian Mbappé'},
-  {time:'27:19',label:'Occasion manquée',type:'chance',player:'A. Griezmann'},
-  {time:'45:02',label:'Bonne transition défensive',type:'defensive',player:'R. Varane'},
-  {time:'67:44',label:'But de K. Mbappé (doublé)',type:'goal',player:'Kylian Mbappé'},
-  {time:'78:11',label:'Pressing haut efficace',type:'tactical',player:'Équipe'},
-  {time:'89:55',label:'Erreur de relance',type:'error',player:'H. Lloris'},
+const globalStats = [
+  { label: 'Vidéos', value: '24', icon: Film },
+  { label: 'Heures analysées', value: '12h', icon: Clock },
+  { label: 'Matchs couverts', value: '6', icon: BarChart2 },
 ]
-
-const typeColor = (t: string) => t==='goal'?'success':t==='chance'?'warning':t==='error'?'danger':'info'
-const typeBg = (t: string) => t==='goal'?'bg-emerald-500':t==='chance'?'bg-amber-500':t==='error'?'bg-red-500':'bg-sky-500'
 
 export default function VideoPage() {
-  const [selected, setSelected] = useState(VIDEOS[0])
-  return (
-    <div className="flex flex-col min-h-full">
-      <Topbar title="Analyse Vidéo IA" subtitle="Analyse automatique des matchs et séances"/>
-      <div className="p-6 space-y-6">
+  const [activeTab, setActiveTab] = useState('Tous')
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            {label:'Vidéos analysées',value:'42',icon:Video,color:'text-sky-400',bg:'bg-sky-500/10'},
-            {label:'Heures analysées',value:'186h',icon:Clock,color:'text-violet-400',bg:'bg-violet-500/10'},
-            {label:'Actions détectées',value:'3,420',icon:Zap,color:'text-amber-400',bg:'bg-amber-500/10'},
-            {label:'Séquences partagées',value:'128',icon:Film,color:'text-emerald-400',bg:'bg-emerald-500/10'},
-          ].map(k=>(
-            <Card key={k.label} hover>
-              <CardContent className="p-4">
-                <div className={`w-9 h-9 rounded-xl ${k.bg} flex items-center justify-center mb-3`}>
-                  <k.icon className={`w-4 h-4 ${k.color}`}/>
+  const filtered = activeTab === 'Tous'
+    ? videos
+    : videos.filter((v) => v.category === activeTab)
+
+  const featured = videos.find((v) => v.featured)!
+
+  return (
+    <div className="min-h-screen bg-[#09090b]">
+      <Topbar title="Vidéothèque" subtitle="Analyse vidéo & clips tactiques" />
+
+      <div className="px-8 py-8 space-y-8 max-w-7xl mx-auto">
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          {globalStats.map(({ label, value, icon: Icon }) => (
+            <Card key={label} className="bg-[#111114] border-white/[0.06]">
+              <CardContent className="pt-5 pb-5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-white/[0.04]">
+                    <Icon className="w-4 h-4 text-white/30" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] uppercase tracking-widest text-white/30">{label}</p>
+                    <p className="text-2xl font-bold text-white/90 mt-0.5">{value}</p>
+                  </div>
                 </div>
-                <p className="text-xl font-bold text-slate-100">{k.value}</p>
-                <p className="text-xs text-slate-500">{k.label}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-4">
-            <Card>
-              <CardContent className="p-4">
-                <div className={`relative w-full aspect-video rounded-xl overflow-hidden ${selected.thumbnail} flex items-center justify-center cursor-pointer group`}>
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"/>
-                  <div className="relative w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 group-hover:scale-110 transition-transform">
-                    <Play className="w-7 h-7 text-white ml-1"/>
-                  </div>
-                  <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                    <div>
-                      <p className="text-sm font-bold text-white">{selected.title}</p>
-                      <p className="text-xs text-white/70">{selected.date} · {selected.duration}</p>
-                    </div>
-                    {selected.status==='processing' && (
-                      <Badge variant="warning" className="animate-pulse">Analyse en cours...</Badge>
-                    )}
-                    {selected.status==='analyzed' && (
-                      <Badge variant="success">Analysé par IA</Badge>
-                    )}
-                  </div>
-                  <div className="absolute top-4 left-4 right-4 flex gap-1">
-                    {[0,1,2,3].map(s=>(
-                      <div key={s} className="flex-1 h-0.5 bg-white/60 rounded-full"/>
-                    ))}
-                  </div>
+        {/* Featured video */}
+        <Card className="bg-[#111114] border-white/[0.06] overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-5">
+            <div className={`lg:col-span-3 relative h-64 lg:h-80 bg-gradient-to-br ${featured.color} flex items-center justify-center`}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <button className="relative z-10 w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-sm hover:bg-white/20 transition-colors cursor-pointer">
+                <Play className="w-6 h-6 text-white fill-white ml-1" />
+              </button>
+              <div className="absolute bottom-4 left-4 right-4 z-10">
+                <Badge className="text-[10px] bg-blue-500/20 text-blue-300 border-blue-500/20 mb-2">{featured.category}</Badge>
+                <p className="text-xs text-white/50">{featured.duration}</p>
+              </div>
+            </div>
+            <div className="lg:col-span-2 p-6 flex flex-col justify-between">
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-white/30 mb-3">Vidéo à la une</p>
+                <h2 className="text-lg font-semibold text-white/90 leading-snug mb-3">{featured.title}</h2>
+                <p className="text-sm text-white/40 leading-relaxed">
+                  Décryptage complet des 90 minutes face à la Croatie : analyse du bloc défensif,
+                  transitions offensives et organisation en phases de possession.
+                </p>
+              </div>
+              <div className="mt-6 space-y-4">
+                <div className="flex items-center gap-4 text-[11px] text-white/30">
+                  <span>{featured.date}</span>
+                  <span>·</span>
+                  <span>{featured.views} vues</span>
+                  <span>·</span>
+                  <span>{featured.duration}</span>
+                </div>
+                <Button className="w-full bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 text-sm">
+                  <Play className="w-3.5 h-3.5 mr-2 fill-blue-400" />
+                  Regarder maintenant
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Filter tabs */}
+        <div className="flex items-center gap-1 p-1 bg-[#111114] border border-white/[0.06] rounded-xl w-fit">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer ${
+                activeTab === tab
+                  ? 'bg-white/[0.08] text-white/90'
+                  : 'text-white/35 hover:text-white/60'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Video grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((v) => (
+            <Card key={v.id} className="bg-[#111114] border-white/[0.06] overflow-hidden group cursor-pointer hover:border-white/[0.10] transition-colors">
+              <div className={`relative h-44 bg-gradient-to-br ${v.color} flex items-center justify-center`}>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="w-11 h-11 rounded-full bg-white/10 border border-white/15 flex items-center justify-center backdrop-blur-sm group-hover:bg-white/20 transition-colors">
+                  <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                </div>
+                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between z-10">
+                  <Badge className="text-[10px] bg-black/40 text-white/60 border-white/10 backdrop-blur-sm">{v.category}</Badge>
+                  <span className="text-[11px] text-white/50 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">{v.duration}</span>
+                </div>
+              </div>
+              <CardContent className="pt-3 pb-4">
+                <p className="text-sm text-white/80 font-medium leading-snug line-clamp-2 mb-2">{v.title}</p>
+                <div className="flex items-center justify-between text-[11px] text-white/30">
+                  <span>{v.date}</span>
+                  <span>{v.views} vues</span>
                 </div>
               </CardContent>
             </Card>
-
-            {selected.status==='analyzed' && (
-              <Card>
-                <CardHeader><CardTitle>Timeline intelligente — {selected.title}</CardTitle></CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="relative w-full h-2 bg-[#1E2D4A] rounded-full mb-6">
-                    {HIGHLIGHTS.map((h,i)=>{
-                      const [min,sec] = h.time.split(':').map(Number)
-                      const totalMin = 94
-                      const pct = ((min + sec/60) / totalMin * 100)
-                      return (
-                        <div key={i} className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full ${typeBg(h.type)} cursor-pointer hover:scale-150 transition-transform`} style={{left:`${pct}%`}} title={h.label}/>
-                      )
-                    })}
-                  </div>
-                  {HIGHLIGHTS.map((h,i)=>(
-                    <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#1E2D4A] transition-colors cursor-pointer">
-                      <span className="text-xs font-mono text-slate-500 w-12 shrink-0">{h.time}</span>
-                      <div className={`w-2 h-2 rounded-full ${typeBg(h.type)} shrink-0`}/>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-slate-200">{h.label}</p>
-                        <p className="text-[10px] text-slate-500">{h.player}</p>
-                      </div>
-                      <Badge variant={typeColor(h.type) as 'success'|'warning'|'danger'|'info'} size="sm">{h.type}</Badge>
-                      <Button variant="ghost" size="sm" className="shrink-0"><Play className="w-3 h-3"/></Button>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <Button className="w-full"><Upload className="w-4 h-4"/>Importer une vidéo</Button>
-
-            <Card>
-              <CardHeader><CardTitle>Vidéothèque</CardTitle></CardHeader>
-              <CardContent className="space-y-3 p-4">
-                {VIDEOS.map(v=>(
-                  <div key={v.id} onClick={()=>setSelected(v)} className={`p-3 rounded-lg cursor-pointer transition-all border ${selected.id===v.id?'border-sky-500/50 bg-sky-500/5':'border-[#2A3A5A] hover:border-sky-500/20 hover:bg-[#1E2D4A]'}`}>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg ${v.thumbnail} flex items-center justify-center shrink-0`}>
-                        <Film className="w-4 h-4 text-white/70"/>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-slate-200 truncate">{v.title}</p>
-                        <p className="text-[10px] text-slate-500">{v.date} · {v.duration}</p>
-                      </div>
-                      {v.status==='processing'?<Zap className="w-3.5 h-3.5 text-amber-400 animate-pulse shrink-0"/>:<Eye className="w-3.5 h-3.5 text-slate-500 shrink-0"/>}
-                    </div>
-                    <div className="flex gap-1 mt-2">
-                      {v.tags.map(t=><Badge key={t} variant="outline" size="sm">{t}</Badge>)}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
+          ))}
         </div>
+
       </div>
     </div>
   )
